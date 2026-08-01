@@ -23,8 +23,9 @@ def get_database_url() -> str:
     host = os.getenv("POSTGRES_HOST", "localhost")
     port = os.getenv("POSTGRES_PORT", "5432")
     db = os.getenv("POSTGRES_DB", "ai_news_aggregator")
+    sslmode = os.getenv("POSTGRES_SSLMODE", "prefer")
 
-    return f"postgresql://{user}:{password}@{host}:{port}/{db}"
+    return f"postgresql://{user}:{password}@{host}:{port}/{db}?sslmode={sslmode}"
 
 
 engine = create_engine(get_database_url())
