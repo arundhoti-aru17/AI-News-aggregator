@@ -1,5 +1,6 @@
 from typing import Optional
 import logging
+import time
 import sys
 from pathlib import Path
 
@@ -8,14 +9,16 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from app.agent.digest_agent import DigestAgent
 from app.database.repository import Repository
 
-
-
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
+
+# Gemini free tier: 15 requests/minute for gemini-3.5-flash-lite
+# 60s / 15 = 4s minimum gap between requests to stay under the limit
+SECONDS_BETWEEN_REQUESTS = 4.5  # slight buffer above the strict minimum
 
 
 def process_digests(limit: Optional[int] = None) -> dict:
@@ -60,6 +63,10 @@ def process_digests(limit: Optional[int] = None) -> dict:
         except Exception as e:
             failed += 1
             logger.error(f"✗ Error processing {article_type} {article_id}: {e}")
+
+        # Pace requests to stay under Gemini's free-tier rate limit
+        if idx < total:
+            time.sleep(SECONDS_BETWEEN_REQUESTS)
     
     logger.info(f"Processing complete: {processed} processed, {failed} failed out of {total} total")
     
@@ -71,7 +78,7 @@ def process_digests(limit: Optional[int] = None) -> dict:
 
 
 if __name__ == "__main__":
-    result = process_digests(limit=3)
+    result = process_digests()
     print(f"Total articles: {result['total']}")
     print(f"Processed: {result['processed']}")
     print(f"Failed: {result['failed']}")
