@@ -1,0 +1,49 @@
+# Environment variables (contains real secrets - never commit)
+.env
+app/.env
+docker/.env
+*.env
+!example.env
+!.env.example
+
+# Python virtual environment
+myenv/
+venv/
+env/
+.venv/
+
+# Python bytecode/cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+*.egg
+
+# uv / pip
+.uv/
+pip-wheel-metadata/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Docker volumes (if any local data dirs)
+postgres_data/
