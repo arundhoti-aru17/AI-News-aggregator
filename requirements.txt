@@ -12,3 +12,4 @@ streamlit
 psycopg[binary]
 psycopg_pool
 langgraph-checkpoint-postgres
+feedparser
